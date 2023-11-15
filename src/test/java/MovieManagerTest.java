@@ -1,57 +1,88 @@
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MovieManagerTest {
-    @Test
-    public void testAddMovie() {
-        MovieManager manager = new MovieManager();
-        Movie movie1 = new Movie("Movie 1");
-        manager.addMovie(movie1);
 
-        assertEquals(1, manager.findAll().length);
-        assertEquals(movie1, manager.findAll()[0]);
+    @Test
+    public void testFindAllEmpty() {
+        MovieManager manager = new MovieManager();
+
+        String[] expected = {};
+        String[] actual = manager.findAll();
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void testFindLastWithZeroLimit() {
+        MovieManager manager = new MovieManager(0);
+        manager.addMovie("Film 1");
+        manager.addMovie("Film 2");
+        manager.addMovie("Film 3");
+
+        String[] expected = {};
+        String[] actual = manager.findLast();
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
     public void testFindAll() {
         MovieManager manager = new MovieManager();
-        Movie movie1 = new Movie("Movie 1");
-        Movie movie2 = new Movie("Movie 2");
-        manager.addMovie(movie1);
-        manager.addMovie(movie2);
+        manager.addMovie("Film 1");
+        manager.addMovie("Film 2");
+        manager.addMovie("Film 3");
 
-        assertEquals(2, manager.findAll().length);
-        assertEquals(movie1, manager.findAll()[0]);
-        assertEquals(movie2, manager.findAll()[1]);
+        String[] expected = {"Film 1", "Film 2", "Film 3"};
+        String[] actual = manager.findAll();
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
-    public void testFindLastWithDefaultLimit() {
+    public void testFindLast() {
         MovieManager manager = new MovieManager();
-        Movie[] movies = new Movie[7];
-        for (int i = 0; i < movies.length; i++) {
-            movies[i] = new Movie("Movie " + i);
-            manager.addMovie(movies[i]);
-        }
+        manager.addMovie("Film 1");
+        manager.addMovie("Film 2");
+        manager.addMovie("Film 3");
 
-        Movie[] lastMovies = manager.findLast();
-        assertEquals(5, lastMovies.length);
-        assertEquals(movies[6], lastMovies[0]);
-        assertEquals(movies[5], lastMovies[1]);
+        String[] expected = {"Film 3", "Film 2", "Film 1"};
+        String[] actual = manager.findLast();
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
-    public void testFindLastWithCustomLimit() {
-        MovieManager manager = new MovieManager(3);
-        Movie[] movies = new Movie[5];
-        for (int i = 0; i < movies.length; i++) {
-            movies[i] = new Movie("Movie " + i);
-            manager.addMovie(movies[i]);
-        }
+    public void testFindLastWithLimitExceeded() {
+        MovieManager manager = new MovieManager(2);
+        manager.addMovie("Film 1");
+        manager.addMovie("Film 2");
+        manager.addMovie("Film 3");
 
-        Movie[] lastMovies = manager.findLast();
-        assertEquals(3, lastMovies.length);
-        assertEquals(movies[4], lastMovies[0]);
-        assertEquals(movies[3], lastMovies[1]);
+        String[] expected = {"Film 3", "Film 2"};
+        String[] actual = manager.findLast();
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void testFindLastWithLimitGreaterThanMovies() {
+        MovieManager manager = new MovieManager(5);
+        manager.addMovie("Film 1");
+        manager.addMovie("Film 2");
+        manager.addMovie("Film 3");
+
+        String[] expected = {"Film 3", "Film 2", "Film 1"};
+        String[] actual = manager.findLast();
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void testAddMovie() {
+        MovieManager manager = new MovieManager();
+        manager.addMovie("Film 1");
+
+        String[] expected = {"Film 1"};
+        String[] actual = manager.findAll();
+        Assertions.assertArrayEquals(expected, actual);
     }
 }
+
+

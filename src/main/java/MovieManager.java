@@ -1,33 +1,39 @@
 public class MovieManager {
-    private Movie[] movies;
+    private String[] movies = new String[0];
     private int limit;
 
     public MovieManager() {
-        this(5);
+        this.limit = 5;
     }
 
     public MovieManager(int limit) {
         this.limit = limit;
-        movies = new Movie[0];
     }
 
-    public void addMovie(Movie movie) {
-        Movie[] newMovies = new Movie[movies.length + 1];
-        System.arraycopy(movies, 0, newMovies, 0, movies.length);
-        newMovies[movies.length] = movie;
-        movies = newMovies;
+    public void addMovie(String movie) {
+        String[] tmp = new String[movies.length + 1];
+        for (int i = 0; i < movies.length; i++) {
+            tmp[i] = movies[i];
+        }
+        tmp[tmp.length - 1] = movie;
+        movies = tmp;
     }
 
-    public Movie[] findAll() {
+    public String[] findAll() {
         return movies;
     }
 
-    public Movie[] findLast() {
-        int resultLength = Math.min(limit, movies.length);
-        Movie[] result = new Movie[resultLength];
-        for (int i = 0; i < resultLength; i++) {
-            result[i] = movies[movies.length - 1 - i];
+    public String[] findLast() {
+        int resultLength;
+        if (movies.length < limit) {
+            resultLength = movies.length;
+        } else {
+            resultLength = limit;
         }
-        return result;
+        String[] tmp = new String[resultLength];
+        for (int i = 0; i < tmp.length; i++) {
+            tmp[i] = movies[movies.length - 1 - i];
+        }
+        return tmp;
     }
 }
